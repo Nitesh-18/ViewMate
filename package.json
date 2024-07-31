@@ -1,0 +1,21 @@
+{
+  "name": "Youtube-Clone",
+  "version": "1.0.0",
+  "description": "Creating Youtube Clone at Industry Level",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "javascript",
+    "backend",
+    "Nitesh"
+  ],
+  "author": "Hitesh Choudhary",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  }
+}
