@@ -4,6 +4,7 @@ import { User } from "../models/user-model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { jwt } from "jsonwebtoken";
+import { upload } from "../middlewares/multer.js";
 
 const generateAccessandRefreshToken = async (UserId) => {
   try {
@@ -210,8 +211,49 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(200, req.user, "Current User fetched Successfully !");
 });
 
-const updateAccountDetails = asyncHandler (async (req,res) => {
-  const {fullname, email} = req.body;
-  
-})
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser };
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullname, email } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        fullname: fullname,
+        email,
+      },
+    },
+    { new: true }
+  ).select("-password");
+  return res.json(new ApiResponse(200, user, "Account Details Updated"));
+});
+
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+
+  if (!avatarLocalPath) throw new ApiError(400, "Avatar File is missing");
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  if (!avatar.url)
+    throw new ApiError(400, "Error while uploading Avatar File on Cloudinary");
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        avatar: avatar.url,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password");
+  return res.json(new ApiResponse(200, {}, "Avatar Updated"));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
+  updateUserAvatar,
+};
