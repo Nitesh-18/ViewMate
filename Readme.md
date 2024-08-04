@@ -1,5 +1,5 @@
 
-# YouTube Backend Clone
+# YOUTUBE BACKEND CLONE
 
 ## Overview
 
@@ -26,33 +26,40 @@ This project is a backend clone of YouTube, designed to mimic the core functiona
 ## Project Structure
 
 ```
-YouTube-Backend-Clone/
-├── controllers/
-│   ├── authController.js
-│   ├── videoController.js
-│   ├── commentController.js
-│   ├── subscriptionController.js
-│   ├── watchHistoryController.js
-├── models/
-│   ├── User.js
-│   ├── Video.js
-│   ├── Comment.js
-│   ├── Subscription.js
-│   ├── WatchHistory.js
-├── routes/
-│   ├── authRoutes.js
-│   ├── videoRoutes.js
-│   ├── commentRoutes.js
-│   ├── subscriptionRoutes.js
-│   ├── watchHistoryRoutes.js
-├── middleware/
-│   ├── authMiddleware.js
-├── config/
-│   ├── db.js
-├── .env
+YOUTUBE BACKEND CLONE/
+├── node_modules/
+├── public/
+│ └── temp/
+│ └── .gitkeep
+├── src/
+│ ├── controllers/
+│ │ └── user-controller.js
+│ ├── db/
+│ │ └── db.js
+│ ├── middlewares/
+│ │ ├── auth.js
+│ │ └── multer.js
+│ ├── models/
+│ │ ├── subscription-model.js
+│ │ ├── user-model.js
+│ │ └── video-model.js
+│ ├── routes/
+│ │ └── user-routes.js
+│ ├── utils/
+│ │ ├── ApiError.js
+│ │ ├── ApiResponse.js
+│ │ ├── asyncHandler.js
+│ │ └── cloudinary.js
 ├── app.js
+├── constants.js
+├── index.js
+├── .env
+├── .gitignore
+├── .prettierignore
+├── .prettierrc
+├── package-lock.json
 ├── package.json
-├── README.md
+└── README.md
 ```
 
 ## Getting Started
