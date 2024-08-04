@@ -11,7 +11,7 @@ const generateAccessandRefreshToken = async (UserId) => {
     const refreshToken = user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
-    await user.save({validateBeforesave: false});
+    await user.save({ validateBeforesave: false });
     return { accessToken, refreshToken };
   } catch (error) {}
 };
@@ -98,6 +98,23 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!isValidPassword) {
     throw new ApiError(401, "Invalid User Credentials !");
   }
+  const { accessToken, refreshToken } = generateAccessandRefreshToken(
+    existedUser._id
+  );
+  const loggedInUser = await User.findById(existedUser._id).select(
+    "-password -refreshToken"
+  );
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json({
+      new: new ApiResponse(200, loggedInUser, "User Logged In Successfully !"),
+    });
 });
 
 export { registerUser, loginUser };
