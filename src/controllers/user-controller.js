@@ -13,7 +13,9 @@ const generateAccessandRefreshToken = async (UserId) => {
     user.refreshToken = refreshToken;
     await user.save({ validateBeforesave: false });
     return { accessToken, refreshToken };
-  } catch (error) {}
+  } catch (error) {
+    throw new ApiError(500, "Failed to generate token");
+  }
 };
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -82,39 +84,57 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
-  if (!username || !email) {
+
+  if (!username && !email) {
     throw new ApiError(400, "Username or Email are required");
   }
+
   if (!password) {
     throw new ApiError(400, "Password is required");
   }
+
   const existedUser = await User.findOne({
     $or: [{ email }, { username }],
   });
+
   if (!existedUser) {
     throw new ApiError(404, "Invalid Email or Username");
   }
+
   const isValidPassword = await existedUser.isPasswordCorrect(password);
+
   if (!isValidPassword) {
-    throw new ApiError(401, "Invalid User Credentials !");
+    throw new ApiError(401, "Invalid User Credentials!");
   }
-  const { accessToken, refreshToken } = generateAccessandRefreshToken(
-    existedUser._id
-  );
-  const loggedInUser = await User.findById(existedUser._id).select(
-    "-password -refreshToken"
-  );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-  res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
-    .json({
-      new: new ApiResponse(200, loggedInUser, "User Logged In Successfully !"),
-    });
+
+  try {
+    const accessToken = existedUser.generateAccessToken();
+    const refreshToken = existedUser.generateRefreshToken();
+
+    const loggedInUser = await User.findById(existedUser._id).select(
+      "-password -refreshToken"
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    };
+
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json({
+        response: new ApiResponse(
+          200,
+          loggedInUser,
+          "User Logged In Successfully!"
+        ),
+      });
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw new ApiError(500, "Failed to generate token");
+  }
 });
 
 const logoutUser = asyncHandler(async (req, res) => {

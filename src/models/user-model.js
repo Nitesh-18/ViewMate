@@ -69,32 +69,44 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-  const token = jwt.sign(
-    {
-      id: this._id,
-      email: this.email,
-      username: this.username,
-      fullname: this.fullname,
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: ACCESS_TOKEN_EXPIRY,
-    }
-  );
-  return token;
+  try {
+    const token = jwt.sign(
+      {
+        _id: this._id,
+        email: this.email,
+        username: this.username,
+        fullname: this.fullname,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+      }
+    );
+    console.log("Access token generated successfully:", token);
+    return token;
+  } catch (error) {
+    console.error("Error generating access token:", error);
+    throw new ApiError(500, "Failed to generate access token");
+  }
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  const token = jwt.sign(
-    {
-      id: this._id,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: REFRESH_TOKEN_EXPIRY,
-    }
-  );
-  return token;
+  try {
+    const token = jwt.sign(
+      {
+        _id: this._id,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+      }
+    );
+    console.log("Refresh token generated successfully:", token);
+    return token;
+  } catch (error) {
+    console.error("Error generating refresh token:", error);
+    throw new ApiError(500, "Failed to generate refresh token");
+  }
 };
 
 export const User = mongoose.model("User", userSchema);
