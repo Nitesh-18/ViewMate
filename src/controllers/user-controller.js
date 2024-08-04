@@ -244,7 +244,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       new: true,
     }
   ).select("-password");
-  return res.json(new ApiResponse(200, {}, "Avatar Updated"));
+  return res.json(new ApiResponse(200, {user}, "Avatar Updated"));
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
@@ -265,7 +265,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
       new: true,
     }
   ).select("-password");
-  return res.json(new ApiResponse(200, {}, "Cover Image Updated"));
+  return res.json(new ApiResponse(200, {user}, "Cover Image Updated"));
 });
 
 export {
