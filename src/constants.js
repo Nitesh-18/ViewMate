@@ -1,1 +1,1 @@
-export const DB_Name = "ViewMaate"
+export const DB_Name = "ViewMate"
