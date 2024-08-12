@@ -1,7 +1,7 @@
 {
-  "name": "Youtube-Clone",
+  "name": "ViewMate",
   "version": "1.0.0",
-  "description": "Creating Youtube Clone at Industry Level",
+  "description": "Creating Video Streaming Platform inspired by 'Youtube' at Industry Level",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "backend",
     "Nitesh"
   ],
-  "author": "Hitesh Choudhary",
+  "author": "Nitesh Ranjankar",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.4",
